@@ -18,29 +18,34 @@ RSpec.describe Category, type: :model do
   describe "Validation create category" do
 
     describe "Cannot create categoty if" do
+        
+      describe "Category not have name" do
+        before { @category.name = nil }
+        it { should_not be_valid }
+      end
 
       describe "Name start with lowercase character" do
-        @category.name = "british humor."
+        before { @category.name = "british humor." }
         it { should_not be_valid }
       end
       
       describe "Name have one word" do
-        @category.name = "Humor."
+        before { @category.name = "Humor." }
         it { should_not be_valid }
       end
       
       describe "The first word of a name have less than two laters" do
-        @category.name = "B humor."
+        before { @category.name = "B humor." }
         it { should_not be_valid }
       end
 
       describe "The second word of a name have less than two laters" do
-        @category.name = "British h."
+        before { @category.name = "British h." }
         it { should_not be_valid }
       end
 
       describe "Name doesn't end with point" do
-        @category.name = "British humor"
+        before { @category.name = "British humor" }
         it { should_not be_valid }
       end
     end
