@@ -51,6 +51,13 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    carrierwave (1.2.1)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      mime-types (>= 1.16)
+    carrierwave-base64 (2.5.0)
+      carrierwave (>= 0.8.0)
+      mime-types (~> 3.0)
     childprocess (0.8.0)
       ffi (~> 1.0, >= 1.0.11)
     coffee-rails (4.2.2)
@@ -204,6 +211,8 @@ PLATFORMS
 DEPENDENCIES
   byebug
   capybara (~> 2.13)
+  carrierwave
+  carrierwave-base64
   coffee-rails (~> 4.2)
   database_cleaner
   factory_girl_rails
@@ -223,4 +232,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.14.5
+   1.15.4
