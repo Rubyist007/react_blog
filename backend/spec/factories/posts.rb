@@ -3,5 +3,6 @@ FactoryGirl.define do
     name "British joke."
     content "What do you call a restaurant that only serves pancakes? All Day Brexit."
     file { File.open("#{Rails.root}/app/assets/images/test_image/Joda.jpg") }
+    category_id 1
   end
 end

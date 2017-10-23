@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe Comment, type: :model do
   
   before do 
-    @comment = create(:comment)
+    category = create(:category)
+    comment_association = category.comments << create(:comment, :for_category)
+    @comment = comment_association[0]
   end
 
   subject { @comment }
@@ -52,6 +54,34 @@ RSpec.describe Comment, type: :model do
       describe "Author doesn't end with point" do
         before { @comment.author = "Rovan Atkinson" }
         it { should_not be_valid }
+      end
+    end
+  end
+  describe "Association" do
+    describe "Belongs to or" do
+      describe "Category" do
+        
+        before do 
+          @category = create(:category)
+          comment_association = @category.comments << create(:comment, :for_category)
+          @comment = comment_association[0]
+        end
+
+        it { @comment.commentable == @category }
+      end
+
+      describe "Post" do
+        before do 
+          category = create(:category)
+          
+          post_association = category.posts << create(:post)
+          @post = post_association[0]
+
+          comment_association = @post.comments << create(:comment, :for_post)
+          @comment = comment_association[0]
+        end
+
+        it { @comment.commentable == @post }
       end
     end
   end

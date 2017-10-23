@@ -3,16 +3,19 @@ require 'rails_helper'
 RSpec.describe Post, type: :model do
   
   before do 
-    @post = create(:post)
+    @category = create(:category)
+    post_association = @category.posts << create(:post)
+    @post = post_association[0]
   end
 
   subject { @post }
 
-  describe "Post parameters" do
+  describe "Parameters" do
 
    it { should respond_to :name } 
    it { should respond_to :content }
    it { should respond_to :file }
+   it { should respond_to :category_id }
 
   end
 
@@ -53,6 +56,28 @@ RSpec.describe Post, type: :model do
       describe "File weigh bigger than 2mb." do 
         before { @post.file = File.open("#{Rails.root}/app/assets/images/test_image/NASA_Image.jpg") }
         it { should_not be_valid }
+      end
+    end
+  end
+
+  describe "Association" do
+
+    describe "Belongs to" do
+
+      describe "Category" do
+        it { @post.category == @category }
+      end
+    end
+    describe "Has many" do
+
+      describe "Comments" do
+
+        before do
+          @post.comments << create(:comment, :for_post)
+          @post.comments << create(:comment, :for_post)
+        end
+
+        it { @post.comments.length == 2 }
       end
     end
   end
