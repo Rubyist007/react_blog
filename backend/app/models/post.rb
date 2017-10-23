@@ -4,4 +4,7 @@ class Post < ApplicationRecord
   validates :file, file_size: { less_than_or_equal_to: 2.megabytes, message: "File must be less than 2 megabytes" }
 
   mount_base64_uploader :file, FileUploader
+
+  belongs_to :category
+  has_many :comments, as: :commentable
 end

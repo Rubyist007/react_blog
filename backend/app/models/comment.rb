@@ -1,7 +1,8 @@
 class Comment < ApplicationRecord
   validates_presence_of :author
-  #validates :author, format: { with: REGEX_COMMON_VALID_PROPERTIES_NAME }
   validate :author_validates
+
+  belongs_to :commentable, polymorphic: true
 
   private
 
