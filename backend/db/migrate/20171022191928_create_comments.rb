@@ -4,6 +4,8 @@ class CreateComments < ActiveRecord::Migration[5.1]
       t.string :author
       t.string :content
 
+      t.belongs_to :category, index: true
+
       t.timestamps
     end
   end

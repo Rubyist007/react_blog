@@ -5,6 +5,9 @@ class CreatePosts < ActiveRecord::Migration[5.1]
       t.string :content
       t.string :file
 
+      #t.integer :category_id
+      t.belongs_to :category, index: true
+
       t.timestamps
     end
   end
