@@ -50,4 +50,24 @@ RSpec.describe Category, type: :model do
       end
     end
   end
+
+  describe "Category association" do
+    before do
+      @post = create(:post)
+      @category.posts << @post
+      @category.posts << @post
+
+      @comment = create(:comment)
+      @category.comments << @comment
+      @category.comments << @comment
+    end
+
+    describe "Has many posts" do
+      it { @category.posts.length == 2 }
+    end
+
+    describe "Has many comments" do
+      it { @category.comments.length == 2 }
+    end
+  end
 end
