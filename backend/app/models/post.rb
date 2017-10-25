@@ -7,4 +7,6 @@ class Post < ApplicationRecord
 
   belongs_to :category
   has_many :comments, as: :commentable
+
+  default_scope -> { order('created_at DESC') }
 end

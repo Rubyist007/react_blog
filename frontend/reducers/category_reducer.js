@@ -9,13 +9,16 @@ const initialState = {
 const category = function(state = initialState, action) {
 
   switch(action.type) {
-    case types.RECEIVE_USER_REQUEST:
+    case types.CATEGORY_REQUEST:
       return Object.assign( {}, state, { isFetching: true } )
 
-    case types.RECEIVE_USER_SUCCESS:
-      return Object.assign( {}, state, { data: action.category, isFetching: false } )
+    case types.GET_CATEGORY_SUCCESS:
+      return Object.assign( {}, state, { data: action.category, isFetching: false, errors: [] } )
 
-    case types.RECEIVE_USER_FAILURE:
+    case types.POST_CATEGORY_SUCCESS:
+      return Object.assign( {}, state, { data: state.data.concat(action.category), isFetching: false, errors: [] } )
+
+    case types.CATEGORY_FAILURE:
       return Object.assign( {}, state, { errors: action.errors, isFetching: false } )
   }
   return state

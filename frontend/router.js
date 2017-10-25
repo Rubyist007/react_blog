@@ -1,17 +1,16 @@
 import React from 'react';
-import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-import Root from './components/Root/index'
+import App from './components/App/index'
+import Categories from './components/Categories/index'
 
-const routes = [{
-  path:"/",
-  getComponents(location, callback) {
-    require.ensure([], function (require) {
-      callback(null, require('./components/Root/index').default)
-    })
-  }
-}];
 
 export default (
-  <Router history={browserHistory} routes={routes} />
+  <Router history={browserHistory}>
+    <Route path="/" component={App} >
+      <IndexRoute component={Categories} />
+      <Route path="post" component={Categories} />
+      <Route path="post/:userId" component={Categories} />
+    </Route>
+  </Router>
 );

@@ -48,12 +48,14 @@
     "webpack-dev-server": "~1.16.2"
   },
   "dependencies": {
+    "actioncable": "^5.1.4",
     "bootstrap": "^4.0.0-alpha.6",
     "lodash": "^4.17.4",
     "normalize.css": "^5.0.0",
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
+    "react-bootstrap": "^0.31.3",
     "react-dom": "^15.4.2",
     "react-router": "3.0.3",
     "react-router-redux": "^4.0.8",
@@ -69,4 +71,3 @@
   },
   "homepage": "https://github.com/VasiliyDybinchyc/Sample_Social_Network#readme"
 }
-
