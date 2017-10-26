@@ -8,26 +8,6 @@ class Categories extends Component {
 
   componentWillMount() {
     //this.props.getCategories()
-    //this.createSocket();
-  }
-
-  createSocket() {
-    Cable = require('actioncable')
-
-    var cable = Cable.createConsumer('ws://localhost:3001/cable')
-    this.categories = cable.subscriptions.create({
-      channel: "RoomChanel"
-    }, {
-      connected: () => {},
-      received: (data) => {
-        console.log(data)
-      },
-      create: function(category) {
-        this.perform('create', {
-          name: category.name
-        })
-      }
-    })
   }
 
   render() {

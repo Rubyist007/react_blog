@@ -13,10 +13,10 @@ import axios from 'axios'
 //  return request
 //})
 
-axios.interceptors.response.use(response => {
-  console.log(response)
-  return response
-})
+//axios.interceptors.response.use(response => {
+//  console.log(response)
+//  return response
+//})
 
 export function getCategories() {
   return dispatch => {

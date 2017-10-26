@@ -7,12 +7,9 @@ class CategoryChannel < ApplicationCable::Channel
     # Any cleanup needed when channel is unsubscribed
   end
 
-  def create(opts)
-    p '!!!!!!!!!!!!!!!!!!!!!!!'
-    p p opts
-    p '!!!!!!!!!!!!!!!!!!!!!!!'
+  def create(category)
     Category.create(
-      name: opts["name"]
+      name: category["name"]
     )
   end
 end
