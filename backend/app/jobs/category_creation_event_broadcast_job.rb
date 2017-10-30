@@ -2,7 +2,6 @@ class CategoryCreationEventBroadcastJob < ApplicationJob
   queue_as :default
 
   def perform(category)
-    p category
     ActionCable
       .server
       .broadcast('category_channel',

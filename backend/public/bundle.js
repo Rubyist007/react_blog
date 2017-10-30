@@ -23827,6 +23827,7 @@ var App = function (_Component) {
       }, {
         connected: function connected() {},
         received: function received(data) {
+          console.log(data);
           _this2.props.crateCategory(data);
         },
         create: function create(data) {
@@ -24300,6 +24301,14 @@ var initialState = {
   isFetching: false
 };
 
+function filterById(obj, id) {
+  if (obj.id == id) {
+    return obj.indexOf;
+  } else {
+    return false;
+  }
+}
+
 var category = function category() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
@@ -24314,8 +24323,35 @@ var category = function category() {
 
     case types.POST_CATEGORY_SUCCESS:
       var data = state.data;
-      data.unshift(action.category);
-      return Object.assign({}, state, { data: data, isFetching: false, errors: [] });
+      console.log(action.category);
+
+      var _filterById = function _filterById(obj) {
+        console.log(obj.id);
+        console.log(action.category.id);
+        if (obj.id == action.category.id) {
+          console.log('FIND');
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+      var target = data.findIndex(_filterById);
+
+      console.log(Number.isInteger(target));
+
+      if (Number.isInteger(target)) {
+        console.log(action.category);
+        console.log('UPDATE');
+        console.log(data[target]);
+        data[target] = action.category;
+        console.log(data[target]);
+        console.log(data);
+        return Object.assign({}, state, { data: data, isFetching: false, errors: [] });
+      } else {
+        data.unshift(action.category);
+        return Object.assign({}, state, { data: data, isFetching: false, errors: [] });
+      }
 
     case types.CATEGORY_FAILURE:
       return Object.assign({}, state, { errors: action.errors, isFetching: false });

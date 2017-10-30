@@ -7,7 +7,7 @@ class Category < ApplicationRecord
 
   default_scope -> { order('created_at DESC') }
 
-  after_create_commit do
+  after_commit do
     CategoryCreationEventBroadcastJob.perform_later(self)
   end
 end
