@@ -23786,6 +23786,8 @@ var _reactRedux = __webpack_require__(94);
 
 var _reactBootstrap = __webpack_require__(204);
 
+var _category = __webpack_require__(273);
+
 var _index = __webpack_require__(275);
 
 var _index2 = _interopRequireDefault(_index);
@@ -23808,6 +23810,41 @@ var App = function (_Component) {
   }
 
   _createClass(App, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.createSocket();
+    }
+  }, {
+    key: 'createSocket',
+    value: function createSocket() {
+      var _this2 = this;
+
+      var Cable = __webpack_require__(577);
+
+      var cable = Cable.createConsumer('ws://localhost:3001/cable');
+      this.categories = cable.subscriptions.create({
+        channel: "CategoryChannel"
+      }, {
+        connected: function connected() {},
+        received: function received(data) {
+          _this2.props.crateCategory(data);
+        },
+        create: function create(data) {
+          this.perform('create', {
+            name: data.name,
+            description: data.description
+          });
+        },
+        update: function update(data) {
+          this.perform('update', {
+            name: data.name,
+            description: data.description,
+            id: data.id
+          });
+        }
+      });
+    }
+  }, {
     key: 'whatCreate',
     value: function whatCreate() {
       if (this.props.route.path == "/") {
@@ -23819,6 +23856,14 @@ var App = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
+      var childrenWithProps = _react2.default.Children.map(this.props.children, function (child) {
+        return _react2.default.cloneElement(child, {
+          cableCategory: _this3.categories
+        });
+      });
+
       return _react2.default.createElement(
         'div',
         null,
@@ -23826,7 +23871,7 @@ var App = function (_Component) {
           'div',
           null,
           _react2.default.createElement('link', { rel: 'stylesheet', href: 'https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css' }),
-          _react2.default.createElement(_index2.default, { type: this.whatCreate() })
+          _react2.default.createElement(_index2.default, { type: this.whatCreate(), cableCategory: this.categories })
         ),
         _react2.default.createElement(
           _reactBootstrap.Grid,
@@ -23834,7 +23879,7 @@ var App = function (_Component) {
           _react2.default.createElement(
             _reactBootstrap.Row,
             null,
-            this.props.children
+            childrenWithProps
           )
         )
       );
@@ -23844,7 +23889,22 @@ var App = function (_Component) {
   return App;
 }(_react.Component);
 
-exports.default = App;
+var mapStateToProps = function mapStateToProps(state) {
+  return {};
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    crateCategory: function crateCategory(data) {
+      dispatch((0, _category.postCategorySuccess)(data));
+    },
+    categoryRequest: function categoryRequest() {
+      dispatch((0, _category.categoryRequest)());
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ }),
 /* 275 */
@@ -23916,35 +23976,6 @@ var BlogHeader = function (_Component) {
       this.props.crateCategory(data);
     }
   }, {
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      //this.props.getCategories()
-      this.createSocket();
-    }
-  }, {
-    key: 'createSocket',
-    value: function createSocket() {
-      var _this2 = this;
-
-      var Cable = __webpack_require__(577);
-
-      var cable = Cable.createConsumer('ws://localhost:3001/cable');
-      this.categories = cable.subscriptions.create({
-        channel: "CategoryChannel"
-      }, {
-        connected: function connected() {},
-        received: function received(data) {
-          _this2.props.crateCategory(data);
-        },
-        create: function create(data) {
-          this.perform('create', {
-            name: data.name,
-            description: data.description
-          });
-        }
-      });
-    }
-  }, {
     key: 'hendleSendEvant',
     value: function hendleSendEvant(name, description) {
       var data = {};
@@ -23953,12 +23984,12 @@ var BlogHeader = function (_Component) {
       console.log(data);
 
       this.props.categoryRequest();
-      this.categories.create(data);
+      this.props.cableCategory.create(data);
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       return _react2.default.createElement(
         _reactBootstrap.Navbar,
@@ -23985,7 +24016,7 @@ var BlogHeader = function (_Component) {
             _react2.default.createElement(
               _reactBootstrap.Button,
               { bsStyle: 'primary', onClick: function onClick() {
-                  return _this3.open();
+                  return _this2.open();
                 } },
               'Create ',
               this.props.type
@@ -23993,7 +24024,7 @@ var BlogHeader = function (_Component) {
             this.state.show ? _react2.default.createElement(
               _reactBootstrap.Modal,
               { show: this.state.show, onHide: this.close.bind(this) },
-              _react2.default.createElement(_CreateCategory2.default, { onSubmit: this.hendleSendEvant.bind(this), ref: 'modal', errors: this.props.errors })
+              _react2.default.createElement(_CreateCategory2.default, { onSubmit: this.hendleSendEvant.bind(this), ref: 'modal', errors: this.props.errors, what: 'Category', does: 'Create' })
             ) : null
           )
         )
@@ -24046,6 +24077,10 @@ var _reactBootstrap = __webpack_require__(204);
 
 var _category = __webpack_require__(273);
 
+var _CreateCategory = __webpack_require__(578);
+
+var _CreateCategory2 = _interopRequireDefault(_CreateCategory);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24057,13 +24092,55 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Categories = function (_Component) {
   _inherits(Categories, _Component);
 
-  function Categories() {
+  function Categories(props) {
     _classCallCheck(this, Categories);
 
-    return _possibleConstructorReturn(this, (Categories.__proto__ || Object.getPrototypeOf(Categories)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Categories.__proto__ || Object.getPrototypeOf(Categories)).call(this, props));
+
+    _this.state = {
+      show: false,
+      id: null
+    };
+    return _this;
   }
 
   _createClass(Categories, [{
+    key: 'close',
+    value: function close() {
+      this.setState({ show: false,
+        id: null
+      });
+    }
+  }, {
+    key: 'open',
+    value: function open(id) {
+      this.setState({ show: true,
+        id: id
+      });
+    }
+  }, {
+    key: 'onSubmit',
+    value: function onSubmit() {
+      var data = {};
+      data.category = {};
+      data.category.name = this.refs.modal.getName();
+      data.category.description = this.refs.modal.getDescription();
+      console.log(data);
+      this.props.crateCategory(data);
+    }
+  }, {
+    key: 'hendleSendEvant',
+    value: function hendleSendEvant(name, description, id) {
+      var data = {};
+      data.name = name;
+      data.description = description;
+      data.id = this.state.id;
+      console.log(data);
+
+      this.props.categoryRequest();
+      this.props.cableCategory.update(data);
+    }
+  }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
       this.props.getCategories();
@@ -24071,6 +24148,8 @@ var Categories = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var _props = this.props,
           isFetching = _props.isFetching,
           categories = _props.categories;
@@ -24109,7 +24188,9 @@ var Categories = function (_Component) {
                 ' \xA0\xA0',
                 _react2.default.createElement(
                   _reactBootstrap.Button,
-                  { bsStyle: 'info', bsSize: 'xsmall' },
+                  { bsStyle: 'info', bsSize: 'xsmall', onClick: function onClick() {
+                      return _this2.open(category.id);
+                    } },
                   'Update'
                 ),
                 ' \xA0\xA0',
@@ -24121,7 +24202,12 @@ var Categories = function (_Component) {
               );
             })
           )
-        )
+        ),
+        this.state.show ? _react2.default.createElement(
+          _reactBootstrap.Modal,
+          { show: this.state.show, onHide: this.close.bind(this) },
+          _react2.default.createElement(_CreateCategory2.default, { onSubmit: this.hendleSendEvant.bind(this), ref: 'modal', errors: this.props.errors, what: 'Category', does: 'Update' })
+        ) : null
       );
     }
   }]);
@@ -24141,7 +24227,14 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     getCategories: function getCategories() {
       dispatch((0, _category.getCategories)());
+    },
+    updateCategory: function updateCategory(data) {
+      dispatch((0, _category.patchCategorySuccess)(data));
+    },
+    categoryRequest: function categoryRequest() {
+      dispatch((0, _category.categoryRequest)());
     }
+
   };
 };
 
@@ -52135,7 +52228,10 @@ var CreateCategory = function (_Component) {
     value: function render() {
       var _this2 = this;
 
-      var errors = this.props.errors;
+      var _props = this.props,
+          errors = _props.errors,
+          what = _props.what,
+          does = _props.does;
 
       return _react2.default.createElement(
         'div',
@@ -52146,7 +52242,9 @@ var CreateCategory = function (_Component) {
           _react2.default.createElement(
             _reactBootstrap.Modal.Title,
             null,
-            'Create Category'
+            does,
+            ' ',
+            what
           )
         ),
         _react2.default.createElement(

@@ -31,30 +31,6 @@ class BlogHeader extends Component {
     this.props.crateCategory(data)
   }
 
-  componentWillMount() {
-    //this.props.getCategories()
-    this.createSocket();
-  }
-
-  createSocket() {
-    var Cable = require('actioncable')
-
-    var cable = Cable.createConsumer('ws://localhost:3001/cable')
-    this.categories = cable.subscriptions.create({
-      channel: "CategoryChannel"
-    }, {
-      connected: () => {},
-      received: (data) => {
-        this.props.crateCategory(data)
-      },
-      create: function(data) {
-        this.perform('create', {
-          name: data.name,
-          description: data.description
-        })
-      }
-    })
-  }
 
   hendleSendEvant(name, description) {
     let data = {}
@@ -63,7 +39,7 @@ class BlogHeader extends Component {
     console.log(data)
 
     this.props.categoryRequest()
-    this.categories.create(data)
+    this.props.cableCategory.create(data)
   }
 
   render() {
@@ -76,10 +52,10 @@ class BlogHeader extends Component {
         </Navbar.Header>
         <Nav>
           <NavItem>
-            <Button bsStyle='primary' onClick={ () => this.open() }>Create { this.props.type  }</Button>
+            <Button bsStyle='primary' onClick={ () => this.open() }>Create { this.props.type }</Button>
             { this.state.show ?
               <Modal show={ this.state.show } onHide={this.close.bind(this)}>
-                <CreateCategory onSubmit={this.hendleSendEvant.bind(this)} ref='modal' errors={this.props.errors} />
+                <CreateCategory onSubmit={this.hendleSendEvant.bind(this)} ref='modal' errors={this.props.errors} what="Category" does="Create" />
               </Modal> :
               null
             }

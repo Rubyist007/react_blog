@@ -14,11 +14,11 @@ class CreateCategory extends Component {
     }
 
   render() {
-    const { errors } = this.props
+    const { errors, what, does} = this.props
     return (
       <div>
         <Modal.Header>
-          <Modal.Title>Create Category</Modal.Title>
+          <Modal.Title>{does} {what}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form>

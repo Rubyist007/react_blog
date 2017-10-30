@@ -13,4 +13,8 @@ class CategoryChannel < ApplicationCable::Channel
       description: category["description"] 
     )
   end
+
+  def update(category)
+    Category.find(category["id"]).update_attributes({ name: category["name"], description: category["description"] })
+  end
 end
