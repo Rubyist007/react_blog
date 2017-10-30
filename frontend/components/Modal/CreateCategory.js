@@ -34,7 +34,7 @@ class CreateCategory extends Component {
               <FormControl type='text' inputRef={ref => {this.description = ref}} placeholder='Enter description' />
             </FormGroup>
 
-            <Button bsStyle='success' onClick={() => this.props.onSubmit(this.getName())}>Submit</Button>
+            <Button bsStyle='success' onClick={() => this.props.onSubmit(this.name.value, this.description.value)}>Submit</Button>
 
             { errors.name != undefined ?
               <Alert bsStyle='danger'>

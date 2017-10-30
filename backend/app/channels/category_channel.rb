@@ -9,7 +9,8 @@ class CategoryChannel < ApplicationCable::Channel
 
   def create(category)
     Category.create(
-      name: category["name"]
+      name: category["name"],
+      description: category["description"] 
     )
   end
 end

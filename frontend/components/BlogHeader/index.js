@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect  } from 'react-redux'
-import { createCategory } from '../../actions/category'
+import { postCategorySuccess } from '../../actions/category'
 import { Navbar, Nav, NavItem, Modal, Button } from 'react-bootstrap';
 
 import CreateCategory from '../Modal/CreateCategory'
@@ -46,17 +46,25 @@ class BlogHeader extends Component {
       connected: () => {},
       received: (data) => {
         console.log(data)
+        this.props.crateCategory(data)
       },
-      create: function(name) {
+      create: function(data) {
         this.perform('create', {
-          name: name
+          name: data.name,
+          description: data.description
         })
       }
     })
   }
 
-  hendleSendEvant(name) {
-    this.categories.create(name)
+  hendleSendEvant(name, description) {
+    let data = {}
+    data.category = {}
+    data.name = this.refs.modal.getName()
+    data.description = description
+    console.log(data)
+
+    this.categories.create(data)
   }
 
   render() {
@@ -89,8 +97,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   crateCategory: (data) => {
-    dispatch(createCategory(data))
-  }
+      dispatch(postCategorySuccess(data))
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlogHeader)
