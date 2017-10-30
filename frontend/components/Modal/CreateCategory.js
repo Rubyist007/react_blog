@@ -15,7 +15,6 @@ class CreateCategory extends Component {
 
   render() {
     const { errors } = this.props
-    console.log(errors.name)
     return (
       <div>
         <Modal.Header>

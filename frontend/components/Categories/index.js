@@ -7,7 +7,7 @@ import { getCategories } from '../../actions/category'
 class Categories extends Component {
 
   componentWillMount() {
-    //this.props.getCategories()
+    this.props.getCategories()
   }
 
   render() {

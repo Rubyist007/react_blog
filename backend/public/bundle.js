@@ -23934,7 +23934,6 @@ var BlogHeader = function (_Component) {
       }, {
         connected: function connected() {},
         received: function received(data) {
-          console.log(data);
           _this2.props.crateCategory(data);
         },
         create: function create(data) {
@@ -23949,11 +23948,11 @@ var BlogHeader = function (_Component) {
     key: 'hendleSendEvant',
     value: function hendleSendEvant(name, description) {
       var data = {};
-      data.category = {};
       data.name = this.refs.modal.getName();
       data.description = description;
       console.log(data);
 
+      this.props.categoryRequest();
       this.categories.create(data);
     }
   }, {
@@ -24015,6 +24014,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     crateCategory: function crateCategory(data) {
       dispatch((0, _category.postCategorySuccess)(data));
+    },
+    categoryRequest: function categoryRequest() {
+      dispatch((0, _category.categoryRequest)());
     }
   };
 };
@@ -24064,7 +24066,7 @@ var Categories = function (_Component) {
   _createClass(Categories, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      //this.props.getCategories()
+      this.props.getCategories();
     }
   }, {
     key: 'render',
@@ -24218,7 +24220,9 @@ var category = function category() {
       return Object.assign({}, state, { data: action.category, isFetching: false, errors: [] });
 
     case types.POST_CATEGORY_SUCCESS:
-      return Object.assign({}, state, { data: state.data.concat(action.category), isFetching: false, errors: [] });
+      var data = state.data;
+      data.unshift(action.category);
+      return Object.assign({}, state, { data: data, isFetching: false, errors: [] });
 
     case types.CATEGORY_FAILURE:
       return Object.assign({}, state, { errors: action.errors, isFetching: false });
@@ -52133,7 +52137,6 @@ var CreateCategory = function (_Component) {
 
       var errors = this.props.errors;
 
-      console.log(errors.name);
       return _react2.default.createElement(
         'div',
         null,

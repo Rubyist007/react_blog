@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect  } from 'react-redux'
-import { postCategorySuccess } from '../../actions/category'
+import { postCategorySuccess, categoryRequest } from '../../actions/category'
 import { Navbar, Nav, NavItem, Modal, Button } from 'react-bootstrap';
 
 import CreateCategory from '../Modal/CreateCategory'
@@ -45,7 +45,6 @@ class BlogHeader extends Component {
     }, {
       connected: () => {},
       received: (data) => {
-        console.log(data)
         this.props.crateCategory(data)
       },
       create: function(data) {
@@ -59,11 +58,11 @@ class BlogHeader extends Component {
 
   hendleSendEvant(name, description) {
     let data = {}
-    data.category = {}
     data.name = this.refs.modal.getName()
     data.description = description
     console.log(data)
 
+    this.props.categoryRequest()
     this.categories.create(data)
   }
 
@@ -98,7 +97,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   crateCategory: (data) => {
       dispatch(postCategorySuccess(data))
-    }
+  },
+  categoryRequest: () => {
+    dispatch(categoryRequest())
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlogHeader)
